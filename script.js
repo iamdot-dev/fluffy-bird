@@ -272,25 +272,35 @@ const background = {
 };
 
 // Input Control
+function handleInput() {
+    switch (gameState) {
+        case 'start':
+            gameState = 'playing';
+            startMusic();
+            updateUI();
+            bird.flap();
+            break;
+        case 'playing':
+            bird.flap();
+            break;
+        case 'gameover':
+        case 'win':
+            resetGame();
+            break;
+    }
+}
+
+// Input Control
 document.addEventListener('keydown', function (e) {
     if (e.code === 'ArrowUp') {
-        switch (gameState) {
-            case 'start':
-                gameState = 'playing';
-                startMusic();
-                updateUI();
-                bird.flap();
-                break;
-            case 'playing':
-                bird.flap();
-                break;
-            case 'gameover':
-            case 'win':
-                resetGame();
-                break;
-        }
+        handleInput();
     }
 });
+
+document.addEventListener('touchstart', function (e) {
+    e.preventDefault(); // Prevent scrolling/zooming
+    handleInput();
+}, { passive: false });
 
 function updateUI() {
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
